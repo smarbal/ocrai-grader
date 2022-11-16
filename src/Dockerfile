@@ -5,8 +5,10 @@ WORKDIR /app
 COPY requirements.txt .
 RUN pip install -r requirements.txt
 
-COPY public public
 COPY templates templates
+COPY static static
+
+COPY package-lock.json package.json tailwind.config.js ./
 
 COPY app.py .
 

@@ -1,10 +1,7 @@
-<!DOCTYPE html>
-<html>
-<head>
-  <meta charset="UTF-8">
-  <title>easylfi</title>
-</head>
-<body>
-  <p>Hello !</p>
-</body>
-</html>
+{% extends 'base.html' %}
+
+{% block content %}
+    <h1>{% block title %} Index {% endblock %}</h1>
+    <h1 class="text-gray-800 font-bold">Hello World!</h1>
+    <h2>Welcome to OCRai!</h2>
+{% endblock %}
