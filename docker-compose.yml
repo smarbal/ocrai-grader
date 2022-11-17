@@ -6,3 +6,6 @@ services:
     restart: always
     ports:
       - "3000:3000"
+    volumes: ['./src:/app']
+    environment:
+      FLASK_DEBUG: 1 
