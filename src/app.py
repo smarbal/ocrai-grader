@@ -1,11 +1,52 @@
 from flask import Flask, request, Response, render_template
 from paddleocr import PaddleOCR,draw_ocr
-
+import cv2
+import matplotlib.pyplot as plt
 import os
 
 app = Flask(__name__)
+
+ocr = PaddleOCR(use_angle_cls=True, lang='en') # need to run only once to download and load model into memory
+img_path = './imgs_en/img_12.jpg'
+result = ocr.ocr(img_path, cls=True)
+for idx in range(len(result)):
+    res = result[idx]
+    for line in res:
+        print(line)
+
+
+# draw result
 
 
 @app.route("/")
 def index():
     return render_template('index.html')
+
+@app.route("/analyze", methods=["POST"])
+def analyze(): 
+    from PIL import Image
+    result = result[0]
+    image = Image.open(img_path).convert('RGB')
+    boxes = [line[0] for line in result]
+    txts = [line[1][0] for line in result]
+    scores = [line[1][1] for line in result]
+    im_show = draw_ocr(image, boxes, txts, scores, font_path='./fonts/simfang.ttf')
+    im_show = Image.fromarray(im_show)
+    im_show.save('result.jpg')
+    return 'test'
+
+def save_ocr(img_path, out_path, result, font):
+  save_path = os.path.join(out_path, img_path.split('/')[-1] + 'output')
+ 
+  image = cv2.imread(img_path)
+ 
+  boxes = [line[0] for line in result]
+  txts = [line[1][0] for line in result]
+  scores = [line[1][1] for line in result]
+ 
+  im_show = draw_ocr(image, boxes, txts, scores, font_path=font)
+  
+  cv2.imwrite(save_path, im_show)
+ 
+  img = cv2.cvtColor(im_show, cv2.COLOR_BGR2RGB)
+  plt.imshow(img)

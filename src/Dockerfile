@@ -1,4 +1,4 @@
-FROM registry.baidubce.com/paddlepaddle/paddle:2.1.3-gpu-cuda10.2-cudnn7
+FROM paddlepaddle/paddle:2.4.0rc0-cpu
 
 WORKDIR /app
 
