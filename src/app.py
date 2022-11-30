@@ -49,13 +49,13 @@ def analyze():
         filename = secure_filename(file.filename)
         img_path = os.path.join(app.config['UPLOAD_FOLDER'], filename)
         file.save(img_path)
-        output = subprocess.getoutput(f"cd HTR/SimpleHTR/src/ && python main.py --img_file ../../../{img_path}") # --decoder wordbeamsearch
+        output = subprocess.getoutput(f"cd HTR/SimpleHTR/src/ && python main.py --img_file ../../../{img_path} --line_mode") # --decoder wordbeamsearch
         # Use REGEX to extract output informatoin without tensorflow warnings
         recognized = re.findall(r'Recognized: "(.*?)"', output)
         probability = re.findall(r'Probability: .*', output)
         flash(output)
         ""
-        return recognized
+        return output
 
 
 def allowed_file(filename):
