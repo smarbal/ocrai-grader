@@ -50,7 +50,7 @@ def analyze():
         img_path = os.path.join(app.config['UPLOAD_FOLDER'], filename)
         file.save(img_path)
         output = subprocess.getoutput(f"cd HTR/SimpleHTR/src/ && python main.py --img_file ../../../{img_path}") # --decoder wordbeamsearch
-        # Use REGEX to extract output informatoin without tensorflow warnings
+        # Use REGEX to extract output information without tensorflow warnings
         recognized = re.findall(r'Recognized: "(.*?)"', output)
         probability = re.findall(r'Probability: .*', output)
         flash(output)
