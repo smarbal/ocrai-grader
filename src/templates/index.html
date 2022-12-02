@@ -48,7 +48,7 @@
     </div>
 
             <div>
-              <button onclick="analyzeImage()" class="relative inline-flex items-center justify-center p-0.5 mb-2 mr-2 overflow-hidden text-sm font-medium text-gray-900 rounded-lg group bg-gradient-to-br from-pink-500 to-orange-400 group-hover:from-pink-500 group-hover:to-orange-400 hover:text-white dark:text-white focus:ring-4 focus:outline-none focus:ring-pink-200 dark:focus:ring-pink-800" >
+              <button type="submit" id="buttonSubmit" class="relative inline-flex items-center justify-center p-0.5 mb-2 mr-2 overflow-hidden text-sm font-medium text-gray-900 rounded-lg group bg-gradient-to-br from-pink-500 to-orange-400 group-hover:from-pink-500 group-hover:to-orange-400 hover:text-white dark:text-white focus:ring-4 focus:outline-none focus:ring-pink-200 dark:focus:ring-pink-800" >
                 <span class="relative px-5 py-2.5 transition-all ease-in duration-75 bg-white dark:bg-gray-900 rounded-md group-hover:bg-opacity-0">
                     Upload file
                 </span>
@@ -83,8 +83,10 @@
           clue.remove();
         }
       }
+      
+      buttonSubmit.addEventListener("click",(event) => {
+        event.preventDefault();
 
-      function analyzeImage(){
         var loading = document.getElementById("loading");
         loading.className = "text-center"
 
@@ -94,14 +96,15 @@
         fd.append('file', file)
 
         // send `POST` request
-        fetch('/upload-avatar', {
+        fetch('/analyze', {
           method: 'POST',
           body: fd
         })
           .then(res => res.json())
-          .then(json => console.log(json))
+          .then(json => {console.log(json); 
+                          loading.className = "hidden"})
           .catch(err => console.error(err))
-      }
+        });
 
     </script>
 {% endblock %}

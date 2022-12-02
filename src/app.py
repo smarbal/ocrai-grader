@@ -8,6 +8,7 @@ import re
 import os
 import numpy as np
 import cv2
+from flask_cors import CORS
 
 os.environ['TF_CPP_MIN_LOG_LEVEL'] = '3' 
 
@@ -24,6 +25,7 @@ ocr = PaddleOCR(use_angle_cls=True, lang='en') # need to run only once to downlo
 # draw result
 
 app = Flask(__name__)
+CORS(app)
 app.secret_key = 'ThisIsaSecret'
 app.config['SESSION_TYPE'] = 'filesystem'
 app.config['UPLOAD_FOLDER'] = UPLOAD_FOLDER
