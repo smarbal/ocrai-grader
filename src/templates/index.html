@@ -14,13 +14,24 @@
         <img id="preview" ></img>  
         <div id="helper" class="flex flex-col items-center justify-center mt-5 mb-6">
               <svg aria-hidden="true" class="w-10 h-10 mb-3 text-gray-400" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M7 16a4 4 0 01-.88-7.903A5 5 0 1115.9 6L16 6a5 5 0 011 9.9M15 13l-3-3m0 0l-3 3m3-3v12"></path></svg>
-              <p class="mb-2 text-sm text-gray-500 dark:text-gray-400"><span class="font-semibold">Click to upload</span> or drag and drop</p>
+              <p class="mb-2 text-sm text-gray-500 dark:text-gray-400"><span class="font-semibold">Click to upload</span></p>
               <p class="text-xs text-gray-500 dark:text-gray-400 mb-6">SVG, PNG, JPG or GIF (MAX. 800x400px)</p>
           </div>
           <input id="dropzone-file" type="file" name="file" class="hidden" onchange="showPreview(event);"/>
       </label>
       <br>
+      <button id="start-camera">Start Camera</button>
 
+
+      <div id="video_box" class="float-left w-full max-w-full h-auto z-1000 absolute ">
+        <div id="video_overlays" class="float-left"></div>
+        <div>
+          <video id="video" class="" autoplay></video>
+        </div>
+    </div>
+
+      <button id="click-photo">Click Photo</button>
+      <canvas id="canvas" width="320" height="240"></canvas>
 
 
     <div class="flex flex-wrap mt-10">
@@ -68,10 +79,7 @@
       <span class="sr-only">Loading...</span>
   </div>
 </div>
-<button id="start-camera">Start Camera</button>
-<video id="video" width="320" height="240" autoplay></video>
-<button id="click-photo">Click Photo</button>
-<canvas id="canvas" width="320" height="240"></canvas>
+
 <script>
   let camera_button = document.querySelector("#start-camera");
 let video = document.querySelector("#video");
@@ -79,6 +87,7 @@ let click_button = document.querySelector("#click-photo");
 let canvas = document.querySelector("#canvas");
 
 camera_button.addEventListener('click', async function() {
+  event.preventDefault();
    	let stream = await navigator.mediaDevices.getUserMedia({ video: true, audio: false });
 	video.srcObject = stream;
 });
