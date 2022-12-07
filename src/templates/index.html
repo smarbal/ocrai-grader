@@ -68,46 +68,66 @@
       <span class="sr-only">Loading...</span>
   </div>
 </div>
-<video id="player" controls autoplay></video>
-<button id="capture">Capture</button>
+<button id="start-camera">Start Camera</button>
+<video id="video" width="320" height="240" autoplay></video>
+<button id="click-photo">Click Photo</button>
 <canvas id="canvas" width="320" height="240"></canvas>
+<script>
+  let camera_button = document.querySelector("#start-camera");
+let video = document.querySelector("#video");
+let click_button = document.querySelector("#click-photo");
+let canvas = document.querySelector("#canvas");
 
-    <script>
-      function showPreview(event){
-        if(event.target.files.length > 0){
-          var src = URL.createObjectURL(event.target.files[0]);
-          var preview = document.getElementById("preview");
-          var clue = document.getElementById("helper");
+camera_button.addEventListener('click', async function() {
+   	let stream = await navigator.mediaDevices.getUserMedia({ video: true, audio: false });
+	video.srcObject = stream;
+});
+
+click_button.addEventListener('click', function() {
+   	canvas.getContext('2d').drawImage(video, 0, 0, canvas.width, canvas.height);
+   	let image_data_url = canvas.toDataURL('image/jpeg');
+
+   	// data url of the image
+   	console.log(image_data_url);
+});
+</script>
+
+<script>
+  function showPreview(event){
+    if(event.target.files.length > 0){
+      var src = URL.createObjectURL(event.target.files[0]);
+      var preview = document.getElementById("preview");
+      var clue = document.getElementById("helper");
 
 
-          preview.src = src;
-          preview.style.display = "block";
-          preview.className += "w-100 h-64 border-2 cursor-pointer "    
-          clue.remove();
-        }
-      }
-      
-      buttonSubmit.addEventListener("click",(event) => {
-        event.preventDefault();
+      preview.src = src;
+      preview.style.display = "block";
+      preview.className += "w-100 h-64 border-2 cursor-pointer "    
+      clue.remove();
+    }
+  }
+  
+  buttonSubmit.addEventListener("click",(event) => {
+    event.preventDefault();
 
-        var loading = document.getElementById("loading");
-        loading.className = "text-center"
+    var loading = document.getElementById("loading");
+    loading.className = "text-center"
 
-        const input = document.getElementById('dropzone-file')
-        const fd = new FormData()
-        file = input.files[0]
-        fd.append('file', file)
+    const input = document.getElementById('dropzone-file')
+    const fd = new FormData()
+    file = input.files[0]
+    fd.append('file', file)
 
-        // send `POST` request
-        fetch('/analyze', {
-          method: 'POST',
-          body: fd
-        })
-          .then(res => res.json())
-          .then(json => {console.log(json); 
-                          loading.className = "hidden"})
-          .catch(err => console.error(err))
-        });
+    // send `POST` request
+    fetch('/analyze', {
+      method: 'POST',
+      body: fd
+    })
+      .then(res => res.json())
+      .then(json => {console.log(json); 
+                      loading.className = "hidden"})
+      .catch(err => console.error(err))
+    });
 
-    </script>
+</script>
 {% endblock %}
