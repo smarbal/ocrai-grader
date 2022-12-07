@@ -23,15 +23,15 @@
       <button id="start-camera">Start Camera</button>
 
 
-      <div id="video_box" class="w-full max-w-full h-auto z-1000 absolute object-center bg-black">
+      <div id="video_box" class="flex justify-center w-full max-w-full h-auto z-1000 absolute top-10 ">
         <div id="video_overlays" class="float-center"></div>
         <div>
-          <video id="video" class="" autoplay></video>
+          <video id="video" class="rounded-lg border border-gray-200 dark:border-gray-700" autoplay src="https://storage.googleapis.com/web-dev-assets/video-and-source-tags/chrome.webm"></video>
         </div>
     </div>
 
       <button id="click-photo">Click Photo</button>
-      <canvas id="canvas" width="320" height="240"></canvas>
+      <canvas id="canvas" class="invisible"></canvas>
 
 
     <div class="flex flex-wrap mt-10">
@@ -93,11 +93,16 @@ camera_button.addEventListener('click', async function() {
 });
 
 click_button.addEventListener('click', function() {
+    event.preventDefault();
    	canvas.getContext('2d').drawImage(video, 0, 0, canvas.width, canvas.height);
-   	let image_data_url = canvas.toDataURL('image/jpeg');
+   	let image_data_url = canvas.toDataURL();
 
+    var preview = document.getElementById("preview");
+    preview.src = image_data_url;
+    preview.style.display = "block";
+    preview.className += "w-100 h-64 border-2 cursor-pointer "    
    	// data url of the image
-   	console.log(image_data_url);
+   	clue.remove();
 });
 </script>
 
