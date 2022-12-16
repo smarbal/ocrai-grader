@@ -67,6 +67,7 @@ def analyze():
             result = analyze_paddle(img_path)
         
         draw_box(filename, result)
+        format_result(result)
         ################################################################
         #Use SimpleHTR 
         # output = subprocess.getoutput(f"cd HTR/SimpleHTR/src/ && python main.py --img_file ../../../{img_path}") # --decoder wordbeamsearch
@@ -138,6 +139,12 @@ def analyze_paddle(img_path):
     result = ocr.ocr(img_path, cls=True)
     result = result[0]
     return result
+
+def format_result(result):
+    full = ''
+    for elem in result :
+        full += elem[1][0]
+    result.append(full)
 
 def analyze_paddle_pdf(pdf_path):
     # Paddleocr supports Chinese, English, French, German, Korean and Japanese.

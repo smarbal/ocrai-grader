@@ -130,5 +130,5 @@ dmypy.json
 
 node_modules
 
-# src/static/result_images
-# src/static/images
+src/static/result_images
+src/static/images
