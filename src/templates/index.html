@@ -154,6 +154,11 @@
 </script>
 
 <script>
+  let cropper;
+  const image = document.getElementById('preview');
+  const input = document.getElementById('dropzone-file')
+      
+
   function showPreview(event) {
     if (event.target.files.length > 0) {
       var src = URL.createObjectURL(event.target.files[0]);
@@ -165,12 +170,8 @@
       preview.style.display = "block";
       preview.className += "w-100 h-64 border-2 cursor-pointer "
       document.getElementById('preview-zone').remove();
-
-      const image = document.getElementById('preview');
-      const cropper = new Cropper(image, {
-      crop(event) {
-      },
-});
+      cropper = new Cropper(image);
+      
       clue.remove();
     }
   }
@@ -182,15 +183,15 @@
     var loading = document.getElementById("loading");
     loading.className = "text-center"
 
-    const input = document.getElementById('dropzone-file')
-    const fd = new FormData()
-    file = input.files[0]
-    fd.append('file', file)
-
-    // send `POST` request
+    cropper.getCroppedCanvas().toBlob((blob) => {
+    // Pass the image file name as the third parameter if necessary.
+    const formData = new FormData();
+    filename = input.files[0].name
+    formData.append('file', blob, filename);
+    console.log(formData.get('file'))
     fetch('/analyze', {
       method: 'POST',
-      body: fd
+      body: formData
     })
       .then(res => res.json())
       .then(json => {
@@ -199,6 +200,16 @@
       })
       .catch(err => console.error(err))
   });
+  }
+    /*, 'image/png' */);
+
+    //
+    //const fd = new FormData()
+    //
+    //fd.append('file', file)
+
+    // send `POST` request
+    
 
 </script>
 {% endblock %}

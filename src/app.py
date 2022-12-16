@@ -43,7 +43,7 @@ def index():
 
 @app.route("/analyze", methods=["POST"])
 def analyze(): 
-    
+    print(request.files)
     # check if the post request has the file part
     if 'file' not in request.files:
         flash('No file part')
@@ -78,6 +78,7 @@ def analyze():
         ################################################################
         ""
         return result
+    return 'Error'
 
 # def analyze(): 
     
