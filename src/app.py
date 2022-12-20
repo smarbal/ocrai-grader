@@ -9,7 +9,7 @@ import os
 import numpy as np
 import cv2
 from PIL import Image
-
+import json
 from flask_cors import CORS
 
 os.environ['TF_CPP_MIN_LOG_LEVEL'] = '3' 
@@ -71,7 +71,7 @@ def analyze():
             format_result(result)
 
 
-        
+        save_json(filename, result)
         ################################################################
         #Use SimpleHTR 
         # output = subprocess.getoutput(f"cd HTR/SimpleHTR/src/ && python main.py --img_file ../../../{img_path}") # --decoder wordbeamsearch
@@ -158,6 +158,17 @@ def format_result_pdf(result):
             full += i[1][0]
     result.append(full)
 
+def save_json(filename, result):
+    result_filename = filename.rsplit('.', 1)[0] + '_result.' + filename.rsplit('.', 1)[1]
+    result_img_path = os.path.join(app.config['UPLOAD_FOLDER_RESULT'], result_filename)
+    
+    data={}
+    data[filename] = {"result" : result,
+                      "result_img" : result_img_path}
+    
+    with open("static/results.json", "w") as write_file:
+        json.dump(data, write_file)
+     
 def analyze_paddle_pdf(pdf_path):
     # Paddleocr supports Chinese, English, French, German, Korean and Japanese.
     # You can set the parameter `lang` as `ch`, `en`, `fr`, `german`, `korean`, `japan`
