@@ -84,6 +84,13 @@ def analyze():
         return result
     return 'Error'
 
+
+@app.route("/history", methods=["GET"])
+def history(): 
+    with open('static/results.json', 'r') as f:
+        data = json.load(f)
+
+    return render_template('history.html', history=data)
 # def analyze(): 
     
 #     # check if the post request has the file part
