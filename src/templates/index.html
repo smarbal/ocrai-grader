@@ -166,12 +166,18 @@
       var clue = document.getElementById("helper");
 
 
-      preview.src = src;
-      preview.style.display = "block";
+      
       preview.className += "w-100 h-64 border-2 cursor-pointer "
       document.getElementById('preview-zone').remove();
+      if (event.target.files[0].type != "application/pdf") {
+      preview.src = src;
+      preview.style.display = "block";
       cropper = new Cropper(image);
-      
+      }
+      else {
+        //preview.src = "https://upload.wikimedia.org/wikipedia/commons/thumb/8/87/PDF_file_icon.svg/833px-PDF_file_icon.svg.png"
+        preview.alt = event.target.files[0].name
+      }
       clue.remove();
     }
   }
@@ -183,6 +189,7 @@
     var loading = document.getElementById("loading");
     loading.className = "text-center"
 
+    if (cropper){
     cropper.getCroppedCanvas().toBlob((blob) => {
     // Pass the image file name as the third parameter if necessary.
     const formData = new FormData();
@@ -201,6 +208,25 @@
       .catch(err => console.error(err))
   });
   }
+  else {
+    const fd = new FormData()
+    file = input.files[0]
+    fd.append('file', file)
+
+    // send `POST` request
+    fetch('/analyze', {
+      method: 'POST',
+      body: fd
+    })
+      .then(res => res.json())
+      .then(json => {
+        console.log(json);
+        loading.className = "hidden"
+      })
+      .catch(err => console.error(err))
+  }
+}
+  
     /*, 'image/png' */);
 
     //

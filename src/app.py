@@ -63,11 +63,15 @@ def analyze():
         ################################################################
         if filename.rsplit('.', 1)[1].lower() == 'pdf' : 
             result = analyze_paddle_pdf(img_path)
+            format_result_pdf(result)
+
         else :
             result = analyze_paddle(img_path)
+            draw_box(filename, result)
+            format_result(result)
+
+
         
-        draw_box(filename, result)
-        format_result(result)
         ################################################################
         #Use SimpleHTR 
         # output = subprocess.getoutput(f"cd HTR/SimpleHTR/src/ && python main.py --img_file ../../../{img_path}") # --decoder wordbeamsearch
@@ -76,7 +80,7 @@ def analyze():
         # probability = re.findall(r'Probability: .*', output)
         # flash(output)                   
         ################################################################
-        ""
+
         return result
     return 'Error'
 
@@ -146,6 +150,13 @@ def format_result(result):
     for elem in result :
         full += elem[1][0]
     result.append(full)
+    
+def format_result_pdf(result):
+    full = ''
+    for elem in result :
+        for i in elem : 
+            full += i[1][0]
+    result.append(full)
 
 def analyze_paddle_pdf(pdf_path):
     # Paddleocr supports Chinese, English, French, German, Korean and Japanese.
@@ -162,10 +173,10 @@ def analyze_paddle_pdf(pdf_path):
         for pg in range(0, pdf.pageCount):
             page = pdf[pg]
             mat = fitz.Matrix(2, 2)
-            pm = page.getPixmap(matrix=mat, alpha=False)
+            pm = page.get_pixmap(matrix=mat, alpha=False)
             # if width or height > 2000 pixels, don't enlarge the image
             if pm.width > 2000 or pm.height > 2000:
-                pm = page.getPixmap(matrix=fitz.Matrix(1, 1), alpha=False)
+                pm = page.get_pixmap(matrix=fitz.Matrix(1, 1), alpha=False)
 
             img = Image.frombytes("RGB", [pm.width, pm.height], pm.samples)
             img = cv2.cvtColor(np.array(img), cv2.COLOR_RGB2BGR)
@@ -178,7 +189,8 @@ def analyze_paddle_pdf(pdf_path):
         scores = [line[1][1] for line in res]
         im_show = draw_ocr(image, boxes, txts, scores, font_path='./fonts/simfang.ttf')
         im_show = Image.fromarray(im_show)
-        im_show.save('result_page_{}.jpg'.format(idx))
+        img_path = os.path.join( app.config['UPLOAD_FOLDER_RESULT'], pdf_path.split('/')[-1].split('.')[0] + '_result_page_{}.jpg'.format(idx))
+        im_show.save(img_path)
     return result 
 if __name__ == '__main__':
     app.debug = True
