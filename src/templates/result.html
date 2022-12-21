@@ -3,5 +3,39 @@
 {% block title %} Result {% endblock %}
 
 
+
 {% block content %}
+<img id="img" src="../{{result_image}}" alt="" class="max-w-full mx-auto h-auto rounded-lg shadow-xl dark:shadow-gray-800 mt-10">
+
+<div class="flex flex-row align-center justify-center w-200 mt-8">
+    <a id="json_button" class="relative inline-flex items-center justify-center p-0.5 mb-2 mr-2 overflow-hidden text-sm font-medium text-gray-900 rounded-lg group bg-gradient-to-br from-pink-500 to-orange-400 group-hover:from-pink-500 group-hover:to-orange-400 hover:text-white dark:text-white focus:ring-4 focus:outline-none focus:ring-pink-200 dark:focus:ring-pink-800">
+        <span class="relative px-5 py-2.5 transition-all ease-in duration-75 bg-white dark:bg-gray-900 rounded-md group-hover:bg-opacity-0">
+            Download JSON
+        </span>
+    </a>
+      <a href="../{{result_image}}" class="relative inline-flex items-center justify-center p-0.5 mb-2 mr-2 overflow-hidden text-sm font-medium text-gray-900 rounded-lg group bg-gradient-to-br from-teal-300 to-lime-300 group-hover:from-teal-300 group-hover:to-lime-300 dark:text-white dark:hover:text-gray-900 focus:ring-4 focus:outline-none focus:ring-lime-200 dark:focus:ring-lime-800" download="placeholder.png">
+        <span class="relative px-5 py-2.5 transition-all ease-in duration-75 bg-white dark:bg-gray-900 rounded-md group-hover:bg-opacity-0">
+            Download image 
+        </span>
+    </a>
+       
+</div>
+
+<div class="mx-auto max-w-fit">
+<blockquote class="p-4 my-4  bg-gray-50 border-l-4 border-gray-300 dark:border-gray-500 dark:bg-gray-800 mt-8">
+    <p id="result_text" class="text-l font-medium leading-relaxed text-gray-900 dark:text-white">{{result[-1]}}</p>
+</blockquote>
+</div>
+
+<script>
+
+        const blob = new Blob([JSON.stringify({{result | tojson }})], { type: "text/json" });
+        const link = document.getElementById("json_button");
+    
+        link.download = 'result.json';
+        link.href = window.URL.createObjectURL(blob);
+        link.dataset.downloadurl = ["text/json", link.download, link.href].join(":");
+      
+</script>
 {% endblock %}
+

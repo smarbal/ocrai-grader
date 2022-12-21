@@ -97,8 +97,8 @@ def result(document):
     with open('static/results.json', 'r') as f:
         data = json.load(f)
     result = data[document]['result']
-    result_image = data[document]['result_image']
-    return render_template('history.html', history=data)
+    result_image = data[document]['result_img']
+    return render_template('result.html', result=result, result_image=result_image)
 
 
 # def analyze(): 
@@ -173,6 +173,7 @@ def format_result_pdf(result):
     for elem in result :
         for i in elem : 
             full += i[1][0]
+        full += ' '
     result.append(full)
 
 def save_json(filename, result):
@@ -211,6 +212,7 @@ def analyze_paddle_pdf(pdf_path):
 
             img = Image.frombytes("RGB", [pm.width, pm.height], pm.samples)
             img = cv2.cvtColor(np.array(img), cv2.COLOR_RGB2BGR)
+            img.save(os.path.join( app.config['UPLOAD_FOLDER'], pdf_path.split('/')[-1].split('.')[0] + '_page_{}.jpg'.format(pg)))
             imgs.append(img)
     for idx in range(len(result)):
         res = result[idx]
