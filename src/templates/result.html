@@ -29,7 +29,7 @@
 
 <script>
 
-        const blob = new Blob([JSON.stringify({{result | tojson }})], { type: "text/json" });
+        const blob = new Blob([JSON.stringify({{result | tojson }}, undefined,2)], { type: "text/json" }); // undefined,2 are used to pretty-print
         const link = document.getElementById("json_button");
     
         link.download = 'result.json';
