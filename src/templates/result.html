@@ -4,4 +4,55 @@
 
 
 {% block content %}
+<img id="img" src="../static/images/{{result_image}}" alt="" class="max-w-full mx-auto h-auto rounded-lg shadow-xl dark:shadow-gray-800 mt-10">
+
+<canvas id = "canvas" class="max-w-full rounded-lg" width="1200" height="1200" > </canvas>
+
+<blockquote class="p-4 my-4  bg-gray-50 border-l-4 border-gray-300 dark:border-gray-500 dark:bg-gray-800 mt-8">
+    <p id="result_text" class="text-l font-medium leading-relaxed text-gray-900 dark:text-white">This is your text</p>
+</blockquote>
+
+<script src="https://code.jquery.com/jquery-3.3.1.min.js"  crossorigin="anonymous"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/jcanvas/21.0.1/jcanvas.js" crossorigin="anonymous"></script>
+<script>
+    src_img = document.getElementById('img');
+    var canvas = document.getElementById("canvas");  
+    canvas.width = src_img.naturalWidth;
+    canvas.height = src_img.naturalHeight;
+    $('canvas').addLayer({
+        type: 'image',
+        source:"../static/images/{{result_image}}",
+        x: 0, y: 0,
+        fromCenter: false,
+        load: draw_rects
+
+      });
+
+      
+    result_text = document.getElementById('result_text')
+    var result = {{ result | tojson }}
+function draw_rects(){
+
+    for (var block=0; block<result.length -1; block+=1) {
+        $('canvas').addLayer({
+            type: 'rectangle',
+            strokeStyle: '#c33',
+            id: block,
+            strokeWidth: 2,
+            x: result[block][0][0][0] +100, y: result[block][0][1][1] +10,
+            width: result[block][0][1][0] - result[block][0][0][0],
+            height: result[block][0][3][1] - result[block][0][0][1],
+            cornerRadius: 3,
+            mouseover: function(data) {
+                    change_text(data.id);
+                    }
+        }).drawLayers(); 
+    }
+
+    function change_text(block){
+        result_text.innerText = result[block][1][0]
+    }
+}
+</script>
+
 {% endblock %}
