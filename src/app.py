@@ -91,6 +91,16 @@ def history():
         data = json.load(f)
 
     return render_template('history.html', history=data)
+
+@app.route("/result/<document>", methods=["GET"])
+def result(document): 
+    with open('static/results.json', 'r') as f:
+        data = json.load(f)
+    result = data[document]['result']
+    result_image = data[document]['result_image']
+    return render_template('history.html', history=data)
+
+
 # def analyze(): 
     
 #     # check if the post request has the file part
@@ -170,11 +180,14 @@ def save_json(filename, result):
     result_img_path = os.path.join(app.config['UPLOAD_FOLDER_RESULT'], result_filename)
     
     data={}
-    data[filename] = {"result" : result,
+    data = {"result" : result,
                       "result_img" : result_img_path}
-    
+
+    with open("static/results.json", "r") as write_file:
+        original = json.load(write_file)
+        original[filename] = data
     with open("static/results.json", "w") as write_file:
-        json.dump(data, write_file)
+        json.dump(original, write_file) 
      
 def analyze_paddle_pdf(pdf_path):
     # Paddleocr supports Chinese, English, French, German, Korean and Japanese.

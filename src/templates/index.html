@@ -26,7 +26,7 @@
           </svg>
           <p class="mb-2 text-sm text-gray-500 dark:text-gray-400"><span class="font-semibold">Click to upload</span>
           </p>
-          <p class="text-xs text-gray-500 dark:text-gray-400 mb-6">PNG OR JPG </p>
+          <p class="text-xs text-gray-500 dark:text-gray-400 mb-6">PNG, JPG OR PDF </p>
         </div>
         <input id="dropzone-file" type="file" name="file" class="hidden" onchange="showPreview(event);" />
       </label>
@@ -116,6 +116,9 @@
   let click_button = document.querySelector("#click-photo");
   let canvas = document.querySelector("#canvas");
   var clue = document.getElementById("helper");
+  let cropper;
+  const image = document.getElementById('preview');
+  const input = document.getElementById('dropzone-file')
 
   // Launch camera 
   camera_button.addEventListener('click', async function () {
@@ -130,7 +133,7 @@
     event.preventDefault();
     canvas.height = video.videoHeight;
     canvas.width = video.videoWidth;
-    image = canvas.getContext('2d').drawImage(video, 0, 0);
+    image_canvas = canvas.getContext('2d').drawImage(video, 0, 0);
     let image_data_url = canvas.toDataURL();
 
     canvas.toBlob( (blob) => {
@@ -144,20 +147,18 @@
     preview.src = image_data_url;
     preview.style.display = "block";
     preview.className += "w-100 h-64 border-2 cursor-pointer "
-    clue.remove();
+    cropper = new Cropper(image);
+    document.getElementById('preview-zone').remove();
     video_box.classList.add("invisible");
     video.srcObject.getTracks().forEach(track => track.stop());
 
     
 
   });
-</script>
 
-<script>
-  let cropper;
-  const image = document.getElementById('preview');
-  const input = document.getElementById('dropzone-file')
+ 
       
+  // Load image from image form 
 
   function showPreview(event) {
     if (event.target.files.length > 0) {

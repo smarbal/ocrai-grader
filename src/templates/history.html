@@ -4,11 +4,11 @@
 
 
 {% block content %}
-<h1>History</h1>
-<h2>This is all the files that have been processed by our services</h2>
-<h3>Click to see the result</h3>
-<div class="flex flex-col justify-center align-center items-center"></div>
-<div class="w-48 text-sm font-medium text-gray-900 bg-white rounded-lg border border-gray-200 dark:bg-gray-700 dark:border-gray-600 dark:text-white items-center">
+
+<div class="flex flex-col mx-auto  justify-center align-center items-center mt-7">
+<h1 class="flex-auto text-lg font-semibold text-slate-900">History</h1>
+<h2 class=" flex-none text-sm font-medium text-slate-700 mt-2">These are all the files that have been processed by our services</h2>
+<div class="w-200 text-sm font-medium text-gray-900 bg-white rounded-lg border border-gray-200 dark:bg-gray-700 dark:border-gray-600 dark:text-white items-center mt-8">
 
     {% for line in history %}
  
@@ -18,5 +18,5 @@
     </a>
     {% endfor %}
 </div>
-
+</div>
 {% endblock %}

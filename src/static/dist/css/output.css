@@ -1089,6 +1089,16 @@ input:checked + .toggle-bg {
   margin-right: auto;
 }
 
+.mx-10 {
+  margin-left: 2.5rem;
+  margin-right: 2.5rem;
+}
+
+.mx-5 {
+  margin-left: 1.25rem;
+  margin-right: 1.25rem;
+}
+
 .mr-3 {
   margin-right: 0.75rem;
 }
@@ -1139,6 +1149,14 @@ input:checked + .toggle-bg {
 
 .mb-1 {
   margin-bottom: 0.25rem;
+}
+
+.mt-8 {
+  margin-top: 2rem;
+}
+
+.mt-7 {
+  margin-top: 1.75rem;
 }
 
 .block {
@@ -1201,6 +1219,10 @@ input:checked + .toggle-bg {
   height: 2.25rem;
 }
 
+.h-screen {
+  height: 100vh;
+}
+
 .max-h-\[32rem\] {
   max-height: 32rem;
 }
@@ -1237,8 +1259,17 @@ input:checked + .toggle-bg {
   width: 12rem;
 }
 
+.min-w-min {
+  min-width: -moz-min-content;
+  min-width: min-content;
+}
+
 .min-w-\[32rem\] {
   min-width: 32rem;
+}
+
+.min-w-\[50rem\] {
+  min-width: 50rem;
 }
 
 .min-w-\[25rem\] {
@@ -1249,8 +1280,21 @@ input:checked + .toggle-bg {
   max-width: 100%;
 }
 
+.max-w-fit {
+  max-width: -moz-fit-content;
+  max-width: fit-content;
+}
+
 .flex-1 {
   flex: 1 1 0%;
+}
+
+.flex-auto {
+  flex: 1 1 auto;
+}
+
+.flex-none {
+  flex: none;
 }
 
 .flex-shrink {
@@ -1327,6 +1371,10 @@ input:checked + .toggle-bg {
 
 .grid-cols-7 {
   grid-template-columns: repeat(7, minmax(0, 1fr));
+}
+
+.flex-row {
+  flex-direction: row;
 }
 
 .flex-col {
@@ -1720,6 +1768,16 @@ input:checked + .toggle-bg {
 .text-blue-600 {
   --tw-text-opacity: 1;
   color: rgb(28 100 242 / var(--tw-text-opacity));
+}
+
+.text-slate-900 {
+  --tw-text-opacity: 1;
+  color: rgb(15 23 42 / var(--tw-text-opacity));
+}
+
+.text-slate-700 {
+  --tw-text-opacity: 1;
+  color: rgb(51 65 85 / var(--tw-text-opacity));
 }
 
 .opacity-0 {
