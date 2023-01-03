@@ -214,14 +214,11 @@
     file = input.files[0]
     fd.append('file', file)
 
-    // send `POST` request
     fetch('/analyze', {
       method: 'POST',
       body: fd,
       redirect: "follow"
     }).then(response => {
-      // HTTP 301 response
-      // HOW CAN I FOLLOW THE HTTP REDIRECT RESPONSE?
       if (response.redirected) {
           window.location.href = response.url;
       }
@@ -231,13 +228,6 @@
   
     /*, 'image/png' */);
 
-    //
-    //const fd = new FormData()
-    //
-    //fd.append('file', file)
-
-    // send `POST` request
-    
 
 </script>
 {% endblock %}
