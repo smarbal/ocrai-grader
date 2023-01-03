@@ -81,7 +81,7 @@ def analyze():
         # flash(output)                   
         ################################################################
 
-        return result
+        return redirect(url_for('result', document=filename)) 
     return 'Error'
 
 

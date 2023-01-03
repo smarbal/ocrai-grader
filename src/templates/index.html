@@ -15,7 +15,7 @@
   <form id="file-upload-form" class="uploader" action="/analyze" method="POST" enctype="multipart/form-data">
     <div class="flex flex-col gap-10 items-center justify-center ">
       <div id="preview-zone">
-      <label for="dropzone-file"
+      <label id="label-form" for="dropzone-file"
         class="flex flex-col items-center justify-center w-100 h-64 border-2 border-gray-300 border-dashed rounded-lg cursor-pointer bg-gray-50 dark:hover:bg-bray-800 dark:bg-gray-700 hover:bg-gray-100 dark:border-gray-600 dark:hover:border-gray-500 dark:hover:bg-gray-600 min-w-[25rem]">
         
         <div id="helper" class="flex flex-col items-center justify-center mt-5 mb-6">
@@ -134,21 +134,20 @@
     canvas.height = video.videoHeight;
     canvas.width = video.videoWidth;
     image_canvas = canvas.getContext('2d').drawImage(video, 0, 0);
-    let image_data_url = canvas.toDataURL();
 
     canvas.toBlob( (blob) => {
     const file = new File( [ blob ], "camera_capture" + Math.floor(Math.random() * (1000000 - 1000) + 1000) + ".png" );
     const dT = new DataTransfer();
     dT.items.add( file );
-    document.getElementById('dropzone-file').files = dT.files;
+    input.files = dT.files;
     } );
-
+    let image_data_url = canvas.toDataURL();
     var preview = document.getElementById("preview");
     preview.src = image_data_url;
     preview.style.display = "block";
     preview.className += "w-100 h-64 border-2 cursor-pointer "
     cropper = new Cropper(image);
-    document.getElementById('preview-zone').remove();
+    document.getElementById('label-form').remove();
     video_box.classList.add("invisible");
     video.srcObject.getTracks().forEach(track => track.stop());
 
@@ -169,7 +168,7 @@
 
       
       preview.className += "w-100 h-64 border-2 cursor-pointer "
-      document.getElementById('preview-zone').remove();
+      document.getElementById('label-form').remove();
       if (event.target.files[0].type != "application/pdf") {
       preview.src = src;
       preview.style.display = "block";
@@ -199,14 +198,15 @@
     console.log(formData.get('file'))
     fetch('/analyze', {
       method: 'POST',
-      body: formData
-    })
-      .then(res => res.json())
-      .then(json => {
-        console.log(json);
-        loading.className = "hidden"
-      })
-      .catch(err => console.error(err))
+      body: formData,
+      redirect: "follow"
+    }).then(response => {
+      // HTTP 301 response
+      // HOW CAN I FOLLOW THE HTTP REDIRECT RESPONSE?
+      if (response.redirected) {
+          window.location.href = response.url;
+      }
+  });
   });
   }
   else {
@@ -217,14 +217,15 @@
     // send `POST` request
     fetch('/analyze', {
       method: 'POST',
-      body: fd
-    })
-      .then(res => res.json())
-      .then(json => {
-        console.log(json);
-        loading.className = "hidden"
-      })
-      .catch(err => console.error(err))
+      body: fd,
+      redirect: "follow"
+    }).then(response => {
+      // HTTP 301 response
+      // HOW CAN I FOLLOW THE HTTP REDIRECT RESPONSE?
+      if (response.redirected) {
+          window.location.href = response.url;
+      }
+  })
   }
 }
   
