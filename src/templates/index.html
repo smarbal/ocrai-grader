@@ -146,7 +146,7 @@
     preview.src = image_data_url;
     preview.style.display = "block";
     preview.className += "w-100 h-64 border-2 cursor-pointer "
-    cropper = new Cropper(image);
+    cropper = new Cropper(image, {autoCropArea: 1});
     document.getElementById('label-form').remove();
     video_box.classList.add("invisible");
     video.srcObject.getTracks().forEach(track => track.stop());
@@ -172,7 +172,7 @@
       if (event.target.files[0].type != "application/pdf") {
       preview.src = src;
       preview.style.display = "block";
-      cropper = new Cropper(image);
+      cropper = new Cropper(image, {autoCropArea: 1});
       }
       else {
         //preview.src = "https://upload.wikimedia.org/wikipedia/commons/thumb/8/87/PDF_file_icon.svg/833px-PDF_file_icon.svg.png"

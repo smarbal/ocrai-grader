@@ -100,31 +100,6 @@ def result(document):
     result_image = data[document]['result_img']
     return render_template('result.html', result=result, result_image=result_image)
 
-
-# def analyze(): 
-    
-#     # check if the post request has the file part
-#     if 'file' not in request.files:
-#         flash('No file part')
-#         return redirect(url_for('index'))
-#     file = request.files['file']
-#     # if user does not select file, browser also
-#     # submit a empty part without filename
-#     if file.filename == '':
-#         flash('No selected file')
-#         # return redirect(request.url)
-#     if file and allowed_file(file.filename):
-#         filename = secure_filename(file.filename)
-#         img_path = os.path.join(app.config['UPLOAD_FOLDER'], filename)
-#         file.save(img_path)
-#         output = subprocess.getoutput(f"cd HTR/SimpleHTR/src/ && python main.py --img_file ../../../{img_path}") # --decoder wordbeamsearch
-#         # Use REGEX to extract output information without tensorflow warnings
-#         recognized = re.findall(r'Recognized: "(.*?)"', output)
-#         probability = re.findall(r'Probability: .*', output)
-#         flash(output)
-#         ""
-#         return output
-
 def preprocess(img_path):
     img = cv2.imread(img_path, cv2.IMREAD_GRAYSCALE)
 
@@ -166,6 +141,7 @@ def format_result(result):
     full = ''
     for elem in result :
         full += elem[1][0]
+        full += ' '
     result.append(full)
     
 def format_result_pdf(result):
