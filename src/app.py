@@ -12,7 +12,7 @@ from PIL import Image
 import json
 from flask_cors import CORS
 from spellchecker import SpellChecker
-
+from textblob import TextBlob
 
 os.environ['TF_CPP_MIN_LOG_LEVEL'] = '3' 
 
@@ -48,7 +48,7 @@ def index():
 
 @app.route("/analyze", methods=["POST"])
 def analyze(): 
-    print(request.files)
+    lang = request.form['lang']
     # check if the post request has the file part
     if 'file' not in request.files:
         flash('No file part')
@@ -65,17 +65,17 @@ def analyze():
         file.save(img_path)
         
         if filename.rsplit('.', 1)[1].lower() == 'pdf' : 
-            result = analyze_paddle_pdf(img_path)
+            result = analyze_paddle_pdf(img_path, lang) 
             format_result_pdf(result)
 
         else :
-            result = analyze_paddle(img_path)
+            result = analyze_paddle(img_path, lang)
             draw_box(filename, result)
             format_result(result)
 
-        if request.spellcheck : 
-            spellcheck(result, request.lang)
-
+        if request.form['spellcheck'] == 'true' :  
+            spellcheck(result, lang) 
+ 
         save_json(filename, result)
         return redirect(url_for('result', document=filename)) 
     return 'Error'
@@ -84,7 +84,7 @@ def analyze():
 @app.route("/history", methods=["GET"])
 def history(): 
     with open('static/results.json', 'r') as f:
-        data = json.load(f)
+        data = json.load(f) 
 
     return render_template('history.html', history=data)
 
@@ -128,8 +128,11 @@ def draw_box(filename, result):
     im_show = Image.fromarray(im_show)
     im_show.save(img_path)
 
-def analyze_paddle(img_path): 
-    result = ocr.ocr(img_path, cls=True)
+def analyze_paddle(img_path, lang): 
+    if lang == 'fr' : 
+        result = ocr_fr.ocr(img_path, cls=True)
+    else : 
+        result = ocr.ocr(img_path, cls=True)
     result = result[0]
     return result
 
@@ -140,9 +143,19 @@ def spellcheck(result, lang):
     else : 
         checker = english
     
-    for elem in result[-1] :
-        corrected = ''
-        corrected += checker.correction(elem[1][0])
+    corrected = ''
+    text = result[-1].split(' ')
+    for elem in text :
+        try :  
+            corrected += checker.correction(elem)
+        except : 
+            corrected += elem
+        corrected += ' '
+    
+    if lang == 'en' : 
+        blob = TextBlob(corrected) 
+        corrected = str(blob.correct())  
+
     result.append(corrected)
 
 
@@ -177,12 +190,15 @@ def save_json(filename, result):
     with open("static/results.json", "w") as write_file:
         json.dump(original, write_file) 
      
-def analyze_paddle_pdf(pdf_path):
+def analyze_paddle_pdf(pdf_path, lang):
     # Paddleocr supports Chinese, English, French, German, Korean and Japanese.
     # You can set the parameter `lang` as `ch`, `en`, `fr`, `german`, `korean`, `japan`
     # to switch the language model in order.
+    if lang == 'fr' : 
+        result = ocr_fr.ocr(pdf_path, cls=True)
+    else : 
+        result = ocr.ocr(pdf_path, cls=True)
     
-    result = ocr.ocr(pdf_path, cls=True)
 
     # draw result
     import fitz
