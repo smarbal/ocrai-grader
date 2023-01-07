@@ -11,6 +11,8 @@ import cv2
 from PIL import Image
 import json
 from flask_cors import CORS
+from spellchecker import SpellChecker
+
 
 os.environ['TF_CPP_MIN_LOG_LEVEL'] = '3' 
 
@@ -22,6 +24,9 @@ ALLOWED_EXTENSIONS = set(['txt', 'pdf', 'png', 'jpg', 'jpeg', 'gif'])
 
 
 ocr = PaddleOCR(use_angle_cls=True, lang='en') # need to run only once to download and load model into memory
+ocr_fr = PaddleOCR(use_angle_cls=True, lang='fr') # need to run only once to download and load model into memory
+english = SpellChecker()  # the default is English (language='en')
+french = SpellChecker(language='fr')  # use the French Dictionary
 
 
 
@@ -58,9 +63,7 @@ def analyze():
         filename = secure_filename(file.filename)
         img_path = os.path.join(app.config['UPLOAD_FOLDER'], filename)
         file.save(img_path)
-        ################################################################
-        #preprocess(img_path)
-        ################################################################
+        
         if filename.rsplit('.', 1)[1].lower() == 'pdf' : 
             result = analyze_paddle_pdf(img_path)
             format_result_pdf(result)
@@ -70,17 +73,10 @@ def analyze():
             draw_box(filename, result)
             format_result(result)
 
+        if request.spellcheck : 
+            spellcheck(result, request.lang)
 
         save_json(filename, result)
-        ################################################################
-        #Use SimpleHTR 
-        # output = subprocess.getoutput(f"cd HTR/SimpleHTR/src/ && python main.py --img_file ../../../{img_path}") # --decoder wordbeamsearch
-        # # Use REGEX to extract output information without tensorflow warnings
-        # recognized = re.findall(r'Recognized: "(.*?)"', output)
-        # probability = re.findall(r'Probability: .*', output)
-        # flash(output)                   
-        ################################################################
-
         return redirect(url_for('result', document=filename)) 
     return 'Error'
 
@@ -136,6 +132,21 @@ def analyze_paddle(img_path):
     result = ocr.ocr(img_path, cls=True)
     result = result[0]
     return result
+
+
+def spellcheck(result, lang):
+    if lang == 'fr' : 
+        checker = french
+    else : 
+        checker = english
+    
+    for elem in result[-1] :
+        corrected = ''
+        corrected += checker.correction(elem[1][0])
+    result.append(corrected)
+
+
+
 
 def format_result(result):
     full = ''

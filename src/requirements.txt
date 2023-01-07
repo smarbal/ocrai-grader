@@ -8,3 +8,4 @@ opencv-python>=4.4.0.46
 path>=15.0.0
 flask-cors==3.0.10
 PyMuPDF==1.19.0
+pyspellchecker

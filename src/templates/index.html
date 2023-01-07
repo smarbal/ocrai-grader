@@ -123,7 +123,8 @@
   // Launch camera 
   camera_button.addEventListener('click', async function () {
     event.preventDefault();
-    let stream = await navigator.mediaDevices.getUserMedia({ video: true, audio: false });
+    let stream = await navigator.mediaDevices.getUserMedia({ video: {facingMode: "environment"
+  }, audio: false });
     video.srcObject = stream;
     video_box.classList.remove("invisible");
   });
