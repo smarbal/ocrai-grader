@@ -8,12 +8,16 @@
 <p class="mb-6 mt-12 text-lg font-normal text-gray-500 lg:text-xl sm:px-16 xl:px-48 dark:text-gray-400 text-center">
   Analyze your handwritten text with our specialy trained AI's !</p>
 
-<div class="image-container">
+<div class="image-container flex flex-col items-center align-center justify-center">
+  <div class="flex flex-col items-center align-center justify-center max-w-full m-10 min-w-[42rem]  " >
+  <img id="preview" class="min-h-[30rem] empty:hidden"></img>
+  </div>
   <form id="file-upload-form" class="uploader" action="/analyze" method="POST" enctype="multipart/form-data">
     <div class="flex flex-col gap-10 items-center justify-center ">
-      <label for="dropzone-file"
-        class="flex flex-col items-center justify-center w-100 h-64 border-2 border-gray-300 border-dashed rounded-lg cursor-pointer bg-gray-50 dark:hover:bg-bray-800 dark:bg-gray-700 hover:bg-gray-100 dark:border-gray-600 dark:hover:border-gray-500 dark:hover:bg-gray-600">
-        <img id="preview"></img>
+      <div id="preview-zone">
+      <label id="label-form" for="dropzone-file"
+        class="flex flex-col items-center justify-center w-100 h-64 border-2 border-gray-300 border-dashed rounded-lg cursor-pointer bg-gray-50 dark:hover:bg-bray-800 dark:bg-gray-700 hover:bg-gray-100 dark:border-gray-600 dark:hover:border-gray-500 dark:hover:bg-gray-600 min-w-[25rem]">
+        
         <div id="helper" class="flex flex-col items-center justify-center mt-5 mb-6">
           <svg aria-hidden="true" class="w-10 h-10 mb-3 text-gray-400" fill="none" stroke="currentColor"
             viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
@@ -22,10 +26,11 @@
           </svg>
           <p class="mb-2 text-sm text-gray-500 dark:text-gray-400"><span class="font-semibold">Click to upload</span>
           </p>
-          <p class="text-xs text-gray-500 dark:text-gray-400 mb-6">SVG, PNG, JPG or GIF (MAX. 800x400px)</p>
+          <p class="text-xs text-gray-500 dark:text-gray-400 mb-6">PNG, JPG OR PDF </p>
         </div>
         <input id="dropzone-file" type="file" name="file" class="hidden" onchange="showPreview(event);" />
       </label>
+      </div>
       {# Video #}
       <p class="mb-2 text-sm text-gray-500 dark:text-gray-400">Or</p>
       <button id="start-camera" class="text-purple-700 hover:text-white border border-purple-700 hover:bg-purple-800 focus:ring-4 focus:outline-none focus:ring-purple-300 font-medium rounded-lg text-sm px-5 py-2.5 text-center mr-2 mb-2 dark:border-purple-400 dark:text-purple-400 dark:hover:text-white dark:hover:bg-purple-500 dark:focus:ring-purple-900">Start Camera</button>
@@ -43,36 +48,44 @@
 
       {# Selectors  #}
 
-      <div class="flex flex-wrap mt-10">
-        <div class="flex items-center mr-4">
-          <input id="red-radio" type="radio" value="" name="colored-radio"
-            class="w-4 h-4 text-red-600 bg-gray-100 border-gray-300 focus:ring-red-500 dark:focus:ring-red-600 dark:ring-offset-gray-800 focus:ring-2 dark:bg-gray-700 dark:border-gray-600">
-          <label for="red-radio" class="ml-2 text-sm font-medium text-gray-900 dark:text-gray-300">Number</label>
-        </div>
-        <div class="flex items-center mr-4">
-          <input id="green-radio" type="radio" value="" name="colored-radio"
-            class="w-4 h-4 text-green-600 bg-gray-100 border-gray-300 focus:ring-green-500 dark:focus:ring-green-600 dark:ring-offset-gray-800 focus:ring-2 dark:bg-gray-700 dark:border-gray-600">
-          <label for="green-radio" class="ml-2 text-sm font-medium text-gray-900 dark:text-gray-300">Single word</label>
-        </div>
-        <div class="flex items-center mr-4">
-          <input checked id="purple-radio" type="radio" value="" name="colored-radio"
-            class="w-4 h-4 text-purple-600 bg-gray-100 border-gray-300 focus:ring-purple-500 dark:focus:ring-purple-600 dark:ring-offset-gray-800 focus:ring-2 dark:bg-gray-700 dark:border-gray-600">
-          <label for="purple-radio" class="ml-2 text-sm font-medium text-gray-900 dark:text-gray-300">Multiple
-            words</label>
-        </div>
-        <div class="flex items-center mr-4">
-          <input id="teal-radio" type="radio" value="" name="colored-radio"
-            class="w-4 h-4 text-teal-600 bg-gray-100 border-gray-300 focus:ring-teal-500 dark:focus:ring-teal-600 dark:ring-offset-gray-800 focus:ring-2 dark:bg-gray-700 dark:border-gray-600">
-          <label for="teal-radio" class="ml-2 text-sm font-medium text-gray-900 dark:text-gray-300">Multiple
-            lines</label>
-        </div>
-        <div class="flex items-center mr-4">
-          <input id="yellow-radio" type="radio" value="" name="colored-radio"
-            class="w-4 h-4 text-yellow-400 bg-gray-100 border-gray-300 focus:ring-yellow-500 dark:focus:ring-yellow-600 dark:ring-offset-gray-800 focus:ring-2 dark:bg-gray-700 dark:border-gray-600">
-          <label for="yellow-radio" class="ml-2 text-sm font-medium text-gray-900 dark:text-gray-300">Auto</label>
-        </div>
+      <div id="accordion-flush" data-accordion="collapse" data-active-classes="dark:bg-gray-900 text-gray-900 dark:text-white" data-inactive-classes="text-gray-500 dark:text-gray-400">
+        <h2 id="accordion-flush-heading-1">
+          <button type="button" class="flex items-center justify-between w-full py-5 font-medium text-left text-gray-500 border-b border-gray-200 dark:border-gray-700 dark:text-gray-400" data-accordion-target="#accordion-flush-body-1" aria-expanded="false" aria-controls="accordion-flush-body-1">
+            <span>Advanced</span>
+            <svg data-accordion-icon class="w-6 h-6 rotate-180 shrink-0" fill="currentColor" viewBox="0 0 20 20" xmlns="http://www.w3.org/2000/svg"><path fill-rule="evenodd" d="M5.293 7.293a1 1 0 011.414 0L10 10.586l3.293-3.293a1 1 0 111.414 1.414l-4 4a1 1 0 01-1.414 0l-4-4a1 1 0 010-1.414z" clip-rule="evenodd"></path></svg>
+          </button>
+        </h2>
+        <div id="accordion-flush-body-1" class="hidden flex flex-row" aria-labelledby="accordion-flush-heading-1">
+          <div class="flex flex-wrap flex-col mr-6">
+            <h3 class="mb-3 text-base">Language</h3>
+            <br>
+            <div class="flex items-center mr-4">
+                <input id="red-radio" type="radio" value="en" name="lang" class="w-4 h-4 text-red-600 bg-gray-100 border-gray-300 focus:ring-red-500 dark:focus:ring-red-600 dark:ring-offset-gray-800 focus:ring-2 dark:bg-gray-700 dark:border-gray-600">
+                <label for="red-radio" class="ml-2 text-base font-medium text-gray-900 dark:text-gray-300">English</label>
+            </div>
+            <div class="flex items-center mr-4">
+                <input id="green-radio" type="radio" value="fr" name="lang" class="w-4 h-4 text-green-600 bg-gray-100 border-gray-300 focus:ring-green-500 dark:focus:ring-green-600 dark:ring-offset-gray-800 focus:ring-2 dark:bg-gray-700 dark:border-gray-600">
+                <label for="green-radio" class="ml-2 text-base font-large text-gray-900 dark:text-gray-300">French</label>
+            </div>
+            <div class="flex items-center mr-4">
+                <input checked id="purple-radio" type="radio" value="other" name="lang" class="w-4 h-4 text-purple-600 bg-gray-100 border-gray-300 focus:ring-purple-500 dark:focus:ring-purple-600 dark:ring-offset-gray-800 focus:ring-2 dark:bg-gray-700 dark:border-gray-600">
+                <label for="purple-radio" class="ml-2 text-base font-medium text-gray-900 dark:text-gray-300">Other</label>
+            </div>
+          </div>
 
+          <div class="">
+            <h3 class="mb-3">Options</h3>
+            <label class="relative inline-flex items-center cursor-pointer">
+              <input id="spellcheck" type="checkbox" value="false" class="sr-only peer">
+              <div class="w-11 h-6 bg-gray-200 peer-focus:outline-none peer-focus:ring-4 peer-focus:ring-blue-300 dark:peer-focus:ring-blue-800 rounded-full peer dark:bg-gray-700 peer-checked:after:translate-x-full peer-checked:after:border-white after:content-[''] after:absolute after:top-[2px] after:left-[2px] after:bg-white after:border-gray-300 after:border after:rounded-full after:h-5 after:w-5 after:transition-all dark:border-gray-600 peer-checked:bg-amber-300"></div>
+              <span class="ml-3 text-base font-medium text-gray-900 dark:text-gray-300">Spellcheck</span>
+            </label>
+          </div>
+         
+        </div>
       </div>
+
+      
 
       {#  Submit  #}
       <div>
@@ -103,7 +116,7 @@
     <span class="sr-only">Loading...</span>
   </div>
 </div>
-<img src="https://raw.githubusercontent.com/saurabhdaware/text-to-handwriting/master/sample.jpeg" alt="" id="test-img">
+
 <script>
   let camera_button = document.querySelector("#start-camera");
   let video = document.querySelector("#video");
@@ -111,11 +124,15 @@
   let click_button = document.querySelector("#click-photo");
   let canvas = document.querySelector("#canvas");
   var clue = document.getElementById("helper");
+  let cropper;
+  const image = document.getElementById('preview');
+  const input = document.getElementById('dropzone-file')
 
   // Launch camera 
   camera_button.addEventListener('click', async function () {
     event.preventDefault();
-    let stream = await navigator.mediaDevices.getUserMedia({ video: true, audio: false });
+    let stream = await navigator.mediaDevices.getUserMedia({ video: {facingMode: "environment"
+  }, audio: false });
     video.srcObject = stream;
     video_box.classList.remove("invisible");
   });
@@ -125,30 +142,32 @@
     event.preventDefault();
     canvas.height = video.videoHeight;
     canvas.width = video.videoWidth;
-    image = canvas.getContext('2d').drawImage(video, 0, 0);
-    let image_data_url = canvas.toDataURL();
+    image_canvas = canvas.getContext('2d').drawImage(video, 0, 0);
 
     canvas.toBlob( (blob) => {
     const file = new File( [ blob ], "camera_capture" + Math.floor(Math.random() * (1000000 - 1000) + 1000) + ".png" );
     const dT = new DataTransfer();
     dT.items.add( file );
-    document.getElementById('dropzone-file').files = dT.files;
+    input.files = dT.files;
     } );
-
+    let image_data_url = canvas.toDataURL();
     var preview = document.getElementById("preview");
     preview.src = image_data_url;
     preview.style.display = "block";
     preview.className += "w-100 h-64 border-2 cursor-pointer "
-    clue.remove();
+    cropper = new Cropper(image, {autoCropArea: 1});
+    document.getElementById('label-form').remove();
     video_box.classList.add("invisible");
     video.srcObject.getTracks().forEach(track => track.stop());
 
     
 
   });
-</script>
 
-<script>
+ 
+      
+  // Load image from image form 
+
   function showPreview(event) {
     if (event.target.files.length > 0) {
       var src = URL.createObjectURL(event.target.files[0]);
@@ -156,9 +175,18 @@
       var clue = document.getElementById("helper");
 
 
+      
+      preview.className += "w-100 h-64 border-2 cursor-pointer "
+      document.getElementById('label-form').remove();
+      if (event.target.files[0].type != "application/pdf") {
       preview.src = src;
       preview.style.display = "block";
-      preview.className += "w-100 h-64 border-2 cursor-pointer "
+      cropper = new Cropper(image, {autoCropArea: 1});
+      }
+      else {
+        //preview.src = "https://upload.wikimedia.org/wikipedia/commons/thumb/8/87/PDF_file_icon.svg/833px-PDF_file_icon.svg.png"
+        preview.alt = event.target.files[0].name
+      }
       clue.remove();
     }
   }
@@ -168,38 +196,52 @@
     event.preventDefault();
 
     var loading = document.getElementById("loading");
+    var lang = document.querySelector('input[name="lang"]:checked').value;
+    var spellcheck = document.getElementById("spellcheck").checked;
     loading.className = "text-center"
 
-    const input = document.getElementById('dropzone-file')
+    if (cropper){
+    cropper.getCroppedCanvas().toBlob((blob) => {
+    // Pass the image file name as the third parameter if necessary.
+    const formData = new FormData();
+    filename = input.files[0].name
+    formData.append('file', blob, filename);
+    formData.append('spellcheck', spellcheck);
+    formData.append('lang', lang);
+
+    console.log(formData.get('file'))
+    fetch('/analyze', {
+      method: 'POST',
+      body: formData,
+      redirect: "follow"
+    }).then(response => {
+      // HTTP 301 response
+      // HOW CAN I FOLLOW THE HTTP REDIRECT RESPONSE?
+      if (response.redirected) {
+          window.location.href = response.url;
+      }
+  });
+  });
+  }
+  else {
     const fd = new FormData()
     file = input.files[0]
     fd.append('file', file)
 
-    // send `POST` request
     fetch('/analyze', {
       method: 'POST',
-      body: fd
-    })
-      .then(res => res.json())
-      .then(json => {
-        console.log(json);
-        loading.className = "hidden"
-      })
-      .catch(err => console.error(err))
-  });
+      body: fd,
+      redirect: "follow"
+    }).then(response => {
+      if (response.redirected) {
+          window.location.href = response.url;
+      }
+  })
+  }
+}
+  
+    /*, 'image/png' */);
 
-const image = document.getElementById('test-img');
-const cropper = new Cropper(image, {
-  aspectRatio: 16 / 9,
-  crop(event) {
-    console.log(event.detail.x);
-    console.log(event.detail.y);
-    console.log(event.detail.width);
-    console.log(event.detail.height);
-    console.log(event.detail.rotate);
-    console.log(event.detail.scaleX);
-    console.log(event.detail.scaleY);
-  },
-});
+
 </script>
 {% endblock %}
