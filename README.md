@@ -15,8 +15,9 @@ The web page will be available at http://localhost:3000/.
 - PDF files can be uploaded but can't be previewed or cropped. 
 - PDF files with multiple pages are also supported. 
 - History of processed files is available. 
-- Results for any processed are viewable. 
+- Results for any processed file are viewable. 
 - PNG or JSON exports are available. The JSON will contain arrays with the coordinates of text zones and their transcription; image will directly show the zones and their corresponding results.
+- Results for evry word/sentence is given with a confidence score.
 - A spellchecker is available to correct the ouput of the OCR tool, as an option. 
 - French is supported through OCR and spellchecking, as an option. 
 
