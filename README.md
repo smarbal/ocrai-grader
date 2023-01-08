@@ -47,6 +47,8 @@ Convolutional Recurrent Neural Network use a combination of convolutional neural
 - The CNN is good at extracting the features from the images. There is a large amount of contextual information in the input data when doing OCR. The goal of the CNN) is to focus on local information, so it is difficult to take account of the context by only using CNN. To solve this problem,  a bidirectional LSTM (Long Short-Term Memory) is introduced to enhance the context modeling, which has been proven in various projects. 
 - The ouputput of the CNN is fed into the RNN, which processes sequential data. It allows to better capture the context (and therefore better predict abiguous characters), process texts of any length and propagate errors back to the CNN. 
 
+![image](https://user-images.githubusercontent.com/35641452/211216951-0b0ad608-cf7a-417e-9a76-886f8981c6ef.png)
+
 ### Drawbacks
 It is a Chinese project; developemnt and documentation seems geared towards the Chinese community : the chat platform is WeChat (popular Chinese communication app) and a few pre-trained models are Chinese only (handtext recognition model exists for Chinese but not English). 
 
