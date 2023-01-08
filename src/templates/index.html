@@ -227,6 +227,8 @@
     const fd = new FormData()
     file = input.files[0]
     fd.append('file', file)
+    fd.append('spellcheck', spellcheck);
+    fd.append('lang', lang);
 
     fetch('/analyze', {
       method: 'POST',
