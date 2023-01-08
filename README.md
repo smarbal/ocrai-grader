@@ -64,6 +64,10 @@ The main steps were :
 The configuration files can be found on `./train`. 
 That model is finally not included because the initial one wasn't having good results (bad generalisation) and GPU driver problems made it impossible to train it again. 
 
+### Results 
+
+Results are excellent for printed characters in any kind of context. Handwitten text, on the other hand, is harder to get right, the context has to be very clear and the writing must not be too messy. 
+
 ## Spellchecking
 For the spellchecking I use `pyspellchecker`. I choose it because it is one of the fastest Python libraries to do it and it supports multiple langages (and even custom dictionnaries of words, which can be useful in the context of automatic grading).  
 
