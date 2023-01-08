@@ -77,3 +77,4 @@ Solutions such as ChatGPT were really good at correcting texts, even with a lot 
 - https://learnopencv.com/optical-character-recognition-using-paddleocr/
 - https://github.com/PaddlePaddle/PaddleOCR
 - https://fki.tic.heia-fr.ch/databases/iam-handwriting-database
+- https://github.com/barrust/pyspellchecker
