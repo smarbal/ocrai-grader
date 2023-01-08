@@ -16,7 +16,7 @@ from textblob import TextBlob
 
 os.environ['TF_CPP_MIN_LOG_LEVEL'] = '3' 
 
-UPLOAD_FOLDER = './static/images'
+UPLOAD_FOLDER = './static/images'  
 UPLOAD_FOLDER_RESULT = './static/result_images'
 ALLOWED_EXTENSIONS = set(['txt', 'pdf', 'png', 'jpg', 'jpeg', 'gif'])
 
@@ -48,7 +48,7 @@ def index():
 
 @app.route("/analyze", methods=["POST"])
 def analyze(): 
-    lang = request.form['lang']
+    lang = request.form['lang'] 
     # check if the post request has the file part
     if 'file' not in request.files:
         flash('No file part')
@@ -65,7 +65,7 @@ def analyze():
         file.save(img_path)
         
         if filename.rsplit('.', 1)[1].lower() == 'pdf' : 
-            result = analyze_paddle_pdf(img_path, lang) 
+            result, pages = analyze_paddle_pdf(img_path, lang)
             format_result_pdf(result)
 
         else :
@@ -76,7 +76,7 @@ def analyze():
         if request.form['spellcheck'] == 'true' :  
             spellcheck(result, lang) 
  
-        save_json(filename, result)
+        save_json(filename, result, pages)
         return redirect(url_for('result', document=filename)) 
     return 'Error'
 
@@ -85,27 +85,28 @@ def analyze():
 def history(): 
     with open('static/results.json', 'r') as f:
         data = json.load(f) 
-
     return render_template('history.html', history=data)
 
 @app.route("/result/<document>", methods=["GET"])
 def result(document): 
+    pdf = is_pdf(document)
+    page = request.args.get('page', default=0, type=(int)) 
     with open('static/results.json', 'r') as f:
         data = json.load(f)
     result = data[document]['result']
     result_image = data[document]['result_img']
-    return render_template('result.html', result=result, result_image=result_image)
+    return render_template('result.html', result=result, result_image=result_image, pdf=pdf, page=page,document=document)
 
 def preprocess(img_path):
     img = cv2.imread(img_path, cv2.IMREAD_GRAYSCALE)
 
-    # increase contrast
+    # increase contrast 
     pxmin = np.min(img)
     pxmax = np.max(img)
     imgContrast = (img - pxmin) / (pxmax - pxmin) * 255
 
     # increase line width
-    kernel = np.ones((3, 3), np.uint8)
+    kernel = np.ones((3, 3), np.uint8) 
     imgMorph = cv2.erode(imgContrast, kernel, iterations = 1)
 
     # write
@@ -169,23 +170,30 @@ def format_result(result):
     result.append(full)
     
 def format_result_pdf(result):
-    full = ''
-    for elem in result :
-        for i in elem : 
+    for page in result :
+        full = ''
+        for i in page : 
             full += i[1][0]
-        full += ' '
-    result.append(full)
+            full += ' '
+        page.append(full)
+    result.append(full) 
 
-def save_json(filename, result):
-    result_filename = filename.rsplit('.', 1)[0] + '_result.' + filename.rsplit('.', 1)[1]
-    result_img_path = os.path.join(app.config['UPLOAD_FOLDER_RESULT'], result_filename)
+def save_json(filename, result, pages=0):
+    if filename.rsplit('.', 1)[1] == 'pdf' :
+        result_filenames = [filename.rsplit('.', 1)[0] + f'_result_page_{i}.jpg' for i in range(0, pages)]
+        result_img_path = [os.path.join(app.config['UPLOAD_FOLDER_RESULT'], result_filename) for result_filename in result_filenames]
+    else : 
+        result_filename = filename.rsplit('.', 1)[0] + '_result.' + filename.rsplit('.', 1)[1]
+        result_img_path = os.path.join(app.config['UPLOAD_FOLDER_RESULT'], result_filename)
+        
+     
     
     data={}
     data = {"result" : result,
                       "result_img" : result_img_path}
 
-    with open("static/results.json", "r") as write_file:
-        original = json.load(write_file)
+    with open("static/results.json", "r") as read_file:
+        original = json.load(read_file)
         original[filename] = data
     with open("static/results.json", "w") as write_file:
         json.dump(original, write_file) 
@@ -203,8 +211,9 @@ def analyze_paddle_pdf(pdf_path, lang):
     # draw result
     import fitz
 
-    imgs = []
+    imgs = []  
     with fitz.open(pdf_path) as pdf:
+        pages = pdf.pageCount
         for pg in range(0, pdf.pageCount):
             page = pdf[pg]
             mat = fitz.Matrix(2, 2)
@@ -214,7 +223,7 @@ def analyze_paddle_pdf(pdf_path, lang):
                 pm = page.get_pixmap(matrix=fitz.Matrix(1, 1), alpha=False)
 
             img = Image.frombytes("RGB", [pm.width, pm.height], pm.samples)
-            img = cv2.cvtColor(np.array(img), cv2.COLOR_RGB2BGR)
+            #img = cv2.cvtColor(np.array(img), cv2.COLOR_RGB2BGR)
             img.save(os.path.join( app.config['UPLOAD_FOLDER'], pdf_path.split('/')[-1].split('.')[0] + '_page_{}.jpg'.format(pg)))
             imgs.append(img)
     for idx in range(len(result)):
@@ -227,7 +236,13 @@ def analyze_paddle_pdf(pdf_path, lang):
         im_show = Image.fromarray(im_show)
         img_path = os.path.join( app.config['UPLOAD_FOLDER_RESULT'], pdf_path.split('/')[-1].split('.')[0] + '_result_page_{}.jpg'.format(idx))
         im_show.save(img_path)
-    return result 
+    return result, pages  
+
+def is_pdf(filename) : 
+    return filename.rsplit('.', 1)[1] == 'pdf'
 if __name__ == '__main__':
     app.debug = True
     app.run()
+    
+    
+
