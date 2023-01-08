@@ -8,8 +8,8 @@
 <p class="mb-6 mt-12 text-lg font-normal text-gray-500 lg:text-xl sm:px-16 xl:px-48 dark:text-gray-400 text-center">
   Analyze your handwritten text with our specialy trained AI's !</p>
 
-<div class="image-container flex flex-col items-center align-center justify-center">
-  <div class="flex flex-col items-center align-center justify-center max-w-full m-10 min-w-[42rem]  " >
+<div id="top-container" class="image-container flex flex-col items-center align-center justify-center">
+  <div id="preview-container" class="flex flex-col items-center align-center justify-center max-w-full m-10 min-w-[42rem]  " >
   <img id="preview" class="min-h-[30rem] empty:hidden"></img>
   </div>
   <form id="file-upload-form" class="uploader" action="/analyze" method="POST" enctype="multipart/form-data">
@@ -184,8 +184,18 @@
       cropper = new Cropper(image, {autoCropArea: 1});
       }
       else {
-        //preview.src = "https://upload.wikimedia.org/wikipedia/commons/thumb/8/87/PDF_file_icon.svg/833px-PDF_file_icon.svg.png"
-        preview.alt = event.target.files[0].name
+        preview.src = "https://upload.wikimedia.org/wikipedia/commons/thumb/8/87/PDF_file_icon.svg/833px-PDF_file_icon.svg.png"
+        preview.height= "150"
+        preview.width = "150"
+        preview.className = ""
+        input.style.display = "hidden"
+        var prev_container = document.getElementById("preview-container");
+        const pdf_name = document.createElement("p");
+        const node = document.createTextNode(event.target.files[0].name);
+        pdf_name.appendChild(node);
+        pdf_name.className = "mt-3"
+        prev_container.appendChild(pdf_name);
+
       }
       clue.remove();
     }

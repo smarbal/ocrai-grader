@@ -177,7 +177,6 @@ def format_result_pdf(result):
             full += i[1][0]
             full += ' '
         page.append(full)
-    result.append(full) 
 
 def save_json(filename, result, pages=0):
     if filename.rsplit('.', 1)[1] == 'pdf' :
