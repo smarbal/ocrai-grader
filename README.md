@@ -1,5 +1,7 @@
 # OCRai
-Automatic grader web application using AI OCR buit with Flask, Tailwind CSS + Flowbite and PaddleOCR.
+https://github.com/smarbal/ocrai-grader
+
+Automatic grader web application using AI OCR built with Flask, Tailwind CSS + Flowbite, PaddleOCR and pyspellchecker.
 
 ![image](https://user-images.githubusercontent.com/35641452/211175562-b359498a-6327-4d6b-8b4e-7e2e0c4a164e.png)
 
@@ -15,6 +17,7 @@ The web page will be available at http://localhost:3000/.
 - PDF files can be uploaded but can't be previewed or cropped. 
 - PDF files with multiple pages are also supported. 
 - History of processed files is available. 
+- Images can be uploaded by device cameras (works with laptop).
 - Results for any processed file are viewable. 
 - PNG or JSON exports are available. The JSON will contain arrays with the coordinates of text zones and their transcription; image will directly show the zones and their corresponding results.
 - Results for evry word/sentence is given with a confidence score.
@@ -31,7 +34,7 @@ I've selected this toolkit for a few reasons :
 - Open-sourced : Everything is open-sourced and written in Python. The models are also open-sourced, so it's possible to start with any of them and build upon them. This is interesting if needed for a specific use-case (e.g. handwitten text recognition).
 - Multi-language OCR : This is an interesting feature, specially knowing that french text would probably be used for testing it.  
 
-When booting the Docker container, the latest version of their model (PPOCR-v3) is automatically downloaded why the flask server. 
+When booting the Docker container, the latest version of their model (**PPOCR-v3**) is automatically downloaded why the flask server. 
 
 ### Working 
 ![image](https://user-images.githubusercontent.com/35641452/211176906-317cadd2-d6bb-4e7e-b9cc-f26e80b33a9c.png)
@@ -77,6 +80,12 @@ It uses the Levenshtein Distance algorithm to find words within a distance of 2.
 Other libraries were available such as TextBlob (which is used for a wider application range) that use AI but I was having mixed results. 
 Solutions such as ChatGPT were really good at correcting texts, even with a lot of errors, but I wanted to use open-sourced tools and have everything necessary contained in this repository.  
 
+
+## Improvements 
+- Design could be more responsive (specially on mobile). 
+- Code needs refactoring (structure/cleanness).
+- Would be better to have specific AI's for specific tasks such as handwritten text recognition or digits recognition. Planned but had settle for current model due to a few issues. 
+- Add possibility to change image after loading one. 
 ## Sources
 - https://paddleocr.bj.bcebos.com/ebook/Dive_into_OCR.pdf
 - https://learnopencv.com/optical-character-recognition-using-paddleocr/
