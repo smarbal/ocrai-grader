@@ -27,7 +27,20 @@ I've selected this toolkit for a few reasons :
 - Performance : It uses latest state-of-the-art algorithms that have great results with great performance. 
 - Ease of use : Installation is easy to do and the API is pretty simple. A few lines of code are enough to produce results with detection and recognition. 
 - Open-sourced : Everything is open-sourced and written in Python. The models are also open-sourced, so it's possible to start with any of them and build upon them. This is interesting if needed for a specific use-case (e.g. handwitten text recognition).
-- Multi-language OCR : This is an interesting feature, specially knowing that french text would probably be used for testing it.   
+- Multi-language OCR : This is an interesting feature, specially knowing that french text would probably be used for testing it.  
+
+### Working 
+![image](https://user-images.githubusercontent.com/35641452/211176906-317cadd2-d6bb-4e7e-b9cc-f26e80b33a9c.png)
+
+The core framework of PP-OCR contains three modules: text detection,
+detection frame correction, and text recognition.
+- Text detection module: This module is used to detect the various text areas in the image. It has been trained on the DB (Differentiable Binarization) algorithm.
+-  Detection frame correction module: To prepare for text recognition, the irregular text box is corrected into a rectangular frame and the
+text direction will be judged and corrected. For example, it can perform rotations to have a straight text. This relies on training a text direction classifier.
+- Text recognition module: Finally, the module performs text recognition on the corrected detected box to obtain the content of the text. PP-OCR is trained on a CRNN algorithm.
+
+### Drawbacks
+It is a Chinese project; developemnt and documentation seems geared towards the Chinese community : the chat platform is WeChat (popular Chinese communication app) and a few pre-trained models are Chinese only (handtext recognition model exists for Chinese but not English). 
 
 ## Spellchecking
 For the spellchecking I use `pyspellchecker`. I choose it because it is one of the fastest Python libraries to do it and it supports multiple langages (and even custom dictionnaries of words, which can be useful in the context of automatic grading).  
