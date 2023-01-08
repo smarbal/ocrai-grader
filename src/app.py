@@ -63,6 +63,7 @@ def analyze():
         filename = secure_filename(file.filename)
         img_path = os.path.join(app.config['UPLOAD_FOLDER'], filename)
         file.save(img_path)
+        pages = 0
         
         if filename.rsplit('.', 1)[1].lower() == 'pdf' : 
             result, pages = analyze_paddle_pdf(img_path, lang)
@@ -206,7 +207,7 @@ def analyze_paddle_pdf(pdf_path, lang):
         result = ocr_fr.ocr(pdf_path, cls=True)
     else : 
         result = ocr.ocr(pdf_path, cls=True)
-    
+     
 
     # draw result
     import fitz

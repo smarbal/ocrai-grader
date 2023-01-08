@@ -50,6 +50,11 @@
 
 <div class="mx-auto max-w-prose">
 <blockquote class="p-4 my-4  bg-gray-50 border-l-4 border-gray-300 dark:border-gray-500 dark:bg-gray-800 mt-8">
+    {% if pdf %}
+    <p id="result_text" class="text-l font-medium leading-relaxed text-gray-900 dark:text-white">{{result[page][-1]}}</p>
+    {% else %}
+    <p id="result_text" class="text-l font-medium leading-relaxed text-gray-900 dark:text-white">{{result[-1]}}</p>
+    {% endif %}
     <p id="result_text" class="text-l font-medium leading-relaxed text-gray-900 dark:text-white">{{result[page][-1]}}</p>
 </blockquote>
 </div>
