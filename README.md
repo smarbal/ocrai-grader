@@ -12,15 +12,14 @@ Run
 The web page will be available at http://localhost:3000/.
 
 ## Features
-- Users can upload files from storage or directly take a picture with their device.
+- Users can upload files from storage or directly take a picture with their device (works with laptop too).
 - Images can be previewed and cropped before analysis.
 - PDF files can be uploaded but can't be previewed or cropped. 
 - PDF files with multiple pages are also supported. 
 - History of processed files is available. 
-- Images can be uploaded by device cameras (works with laptop).
 - Results for any processed file are viewable. 
 - PNG or JSON exports are available. The JSON will contain arrays with the coordinates of text zones and their transcription; image will directly show the zones and their corresponding results.
-- Results for evry word/sentence is given with a confidence score.
+- Results for every word/sentence is given with a confidence score.
 - A spellchecker is available to correct the ouput of the OCR tool, as an option. 
 - French is supported through OCR and spellchecking, as an option. 
 
@@ -34,7 +33,7 @@ I've selected this toolkit for a few reasons :
 - Open-sourced : Everything is open-sourced and written in Python. The models are also open-sourced, so it's possible to start with any of them and build upon them. This is interesting if needed for a specific use-case (e.g. handwitten text recognition).
 - Multi-language OCR : This is an interesting feature, specially knowing that french text would probably be used for testing it.  
 
-When booting the Docker container, the latest version of their model (**PPOCR-v3**) is automatically downloaded why the flask server. 
+When booting the Docker container, the latest version of their model (**PPOCR-v3**), english and french version, are automatically downloaded by the Flask server. 
 
 ### Working 
 ![image](https://user-images.githubusercontent.com/35641452/211176906-317cadd2-d6bb-4e7e-b9cc-f26e80b33a9c.png)
@@ -49,12 +48,12 @@ text direction will be judged and corrected. For example, it can perform rotatio
 Since recognition is the most important part here, I'll go in to a bit more detail : 
 Convolutional Recurrent Neural Network use a combination of convolutional neural networks (CNNs) and recurrent neural networks (RNNs) to process the images.
 - The CNN is good at extracting the features from the images. There is a large amount of contextual information in the input data when doing OCR. The goal of the CNN) is to focus on local information, so it is difficult to take account of the context by only using CNN. To solve this problem,  a bidirectional LSTM (Long Short-Term Memory) is introduced to enhance the context modeling, which has been proven in various projects. 
-- The ouputput of the CNN is fed into the RNN, which processes sequential data. It allows to better capture the context (and therefore better predict abiguous characters), process texts of any length and propagate errors back to the CNN. 
+- The ouput of the CNN is fed into the RNN, which processes sequential data. It allows to better capture the context (and therefore better predict abiguous characters), process texts of any length and propagate errors back to the CNN. 
 
 ![image](https://user-images.githubusercontent.com/35641452/211216951-0b0ad608-cf7a-417e-9a76-886f8981c6ef.png)
 
 ### Drawbacks
-It is a Chinese project; developemnt and documentation seems geared towards the Chinese community : the chat platform is WeChat (popular Chinese communication app) and a few pre-trained models are Chinese only (handtext recognition model exists for Chinese but not English). 
+It is a Chinese project; developement and documentation seems geared towards the Chinese community : the chat platform is WeChat (popular Chinese communication app) and a few pre-trained models are Chinese only (handwritten text recognition model exists for Chinese but not English). 
 
 ### Finetuned model 
 
@@ -66,14 +65,17 @@ The main steps were :
 4. Use PaddleOCR training tool with the configuration file to start the training. 
 
 The configuration files can be found on `./train`. 
-That model is finally not included because the initial one wasn't having good results (bad generalisation) and GPU driver problems made it impossible to train it again. 
+That model is finally not included because the initial one wasn't having good results (bad generalisation) and unforeseen GPU driver problems made it impossible to train it again. 
 
 ### Results 
 
-Results are excellent for printed characters in any kind of context. Handwitten text, on the other hand, is harder to get right, the context has to be very clear and the writing must not be too messy. 
+Results are excellent for printed characters in any kind of context. Handwritten text, on the other hand, is harder to get right, the context has to be very clear and the writing must not be too messy, cursive or special. Performance is also great generally speaking, it gets longer when processing 3+ pages PDF's with lots of content. 
 
 ## Spellchecking
-For the spellchecking I use `pyspellchecker`. I choose it because it is one of the fastest Python libraries to do it and it supports multiple langages (and even custom dictionnaries of words, which can be useful in the context of automatic grading).  
+
+Since OCR will often have additions/deletions or badly recognized characters in a word, I added a spellchecker to correct those small mistakes. 
+
+Therefore, I use `pyspellchecker`. I chose it because it is one of the fastest Python libraries to do it and it supports multiple langages (and even custom dictionnaries of words, which can be useful in the context of automatic grading).  
 
 It uses the Levenshtein Distance algorithm to find words within a distance of 2. Which means it will try all different insertions, deletions, and substitutions (with a maximum of 2 operations) and compare the results to a dictionary. If the words exist, they are taken as candidates for the correction. It will then select the most frequent one amongst the ones with the smallest distance in the selected language as correction. 
 
